@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+data/*
+!data/.gitkeep
+.env
+.env.*
+!.env.example
+config.json
+*.sqlite*
+*.db*
+*.log
+playwright-report/
+test-results/
+.DS_Store

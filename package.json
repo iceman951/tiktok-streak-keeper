@@ -1,0 +1,44 @@
+{
+  "name": "tiktok-streak-keeper",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "login": "tsx src/cli/index.ts login",
+    "chats": "tsx src/cli/index.ts chats",
+    "test:send": "tsx src/cli/index.ts dry-run",
+    "send": "tsx src/cli/index.ts send",
+    "start": "tsx src/cli/index.ts start",
+    "status": "tsx src/cli/index.ts status",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run typecheck && npm run lint && npm test && npm run format:check",
+    "browser:install": "playwright install chromium"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.6",
+    "node-cron": "^4.6.0",
+    "pino": "^10.4.0",
+    "playwright": "^1.64.0",
+    "proper-lockfile": "^4.1.2",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.20.5",
+    "@types/proper-lockfile": "^4.1.4",
+    "eslint": "^10.12.0",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.1",
+    "vitest": "^5.0.3"
+  }
+}

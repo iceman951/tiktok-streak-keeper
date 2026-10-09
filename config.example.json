@@ -1,0 +1,24 @@
+{
+  "dryRun": true,
+  "liveSendingEnabled": false,
+  "timezone": "Asia/Bangkok",
+  "schedule": "20:00",
+  "headless": false,
+  "messageTemplates": ["Hi {username}! 👋"],
+  "minIntervalSeconds": 60,
+  "maxConsecutiveFailures": 3,
+  "recipients": [],
+  "ui": {
+    "verified": false,
+    "authenticated": "[data-e2e='profile-icon']",
+    "loginRequired": "[data-e2e='top-login-button']",
+    "securityChallenge": "iframe[src*='captcha'], [id*='captcha'], [data-e2e='verify-dialog']",
+    "conversationLinks": "a[href*='/messages']",
+    "conversationRoot": "[data-e2e='chat-room']",
+    "recipientProfileLink": "[data-e2e='chat-header'] a[href*='/@']",
+    "composer": "[contenteditable='true'][role='textbox']",
+    "sendButton": "[data-e2e='message-send']",
+    "outgoingMessages": "[data-e2e='chat-item'][data-direction='outgoing'] [data-e2e='message-text']",
+    "sendFailure": "[data-e2e='message-send-error']"
+  }
+}
