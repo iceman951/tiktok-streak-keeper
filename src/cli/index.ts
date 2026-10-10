@@ -13,7 +13,7 @@ import { runMessages } from '../tiktok/runner.js';
 import { AppError, errorCode } from '../utils/errors.js';
 
 const hints = {
-  AUTH_REQUIRED: 'Run npm run login. If already logged in, verify the authenticated UI selector.',
+  AUTH_REQUIRED: 'Run bun run login. If already logged in, verify the authenticated UI selector.',
   SECURITY_CHALLENGE:
     'Automation stopped. Resolve the restriction manually; no bypass is attempted.',
   UI_CHANGED:

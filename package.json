@@ -4,23 +4,23 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22.13.0"
+    "bun": ">=1.4.2"
   },
   "scripts": {
-    "login": "tsx src/cli/index.ts login",
-    "chats": "tsx src/cli/index.ts chats",
-    "test:send": "tsx src/cli/index.ts dry-run",
-    "send": "tsx src/cli/index.ts send",
-    "start": "tsx src/cli/index.ts start",
-    "status": "tsx src/cli/index.ts status",
-    "build": "tsc",
-    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
-    "test": "vitest run",
-    "lint": "eslint .",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "check": "npm run typecheck && npm run lint && npm test && npm run format:check",
-    "browser:install": "playwright install chromium"
+    "login": "bun src/cli/index.ts login",
+    "chats": "bun src/cli/index.ts chats",
+    "test:send": "bun src/cli/index.ts dry-run",
+    "send": "bun src/cli/index.ts send",
+    "start": "bun src/cli/index.ts start",
+    "status": "bun src/cli/index.ts status",
+    "build": "bun --bun tsc",
+    "typecheck": "bun --bun tsc --noEmit && bun --bun tsc -p tsconfig.test.json",
+    "test": "bun --bun vitest run",
+    "lint": "bun --bun eslint .",
+    "format": "bun --bun prettier --write .",
+    "format:check": "bun --bun prettier --check .",
+    "check": "bun run typecheck && bun run lint && bun run test && bun run format:check",
+    "browser:install": "bun --bun playwright install chromium"
   },
   "dependencies": {
     "dotenv": "^18.0.6",
@@ -36,9 +36,9 @@
     "@types/proper-lockfile": "^4.1.4",
     "eslint": "^10.12.0",
     "prettier": "^3.9.9",
-    "tsx": "^4.23.15",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.71.1",
     "vitest": "^5.0.3"
-  }
+  },
+  "packageManager": "bun@1.4.2"
 }

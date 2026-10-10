@@ -6,9 +6,11 @@ A small, local TypeScript CLI that attempts one direct message per approved TikT
 
 Sending a message does not guarantee a streak. TikTok controls streak eligibility, timing, and recipient participation. This is an unofficial personal tool, without stealth, CAPTCHA bypass, proxy rotation, or security evasion.
 
+คู่มือภาษาไทย: [รันบนเครื่องตัวเอง](docs/run-local.th.md) · [deploy ขึ้น Cloudflare](docs/deploy-cloudflare.th.md)
+
 ## Prerequisites
 
-- Node.js **22.13+**, preferably a maintained LTS release, and npm. The built-in `node:sqlite` API avoids a native SQLite dependency; some Node releases print an experimental warning.
+- [Bun](https://bun.com/docs/installation) **1.4.2+**. Bun runs TypeScript directly and supports the built-in `node:sqlite` API used for history; Node.js and npm are not required.
 - Windows, macOS, or Linux with a desktop available for manual Chromium login.
 - An account allowed to use TikTok direct messages and existing conversations with consenting recipients.
 - A persistent, private local disk. Keep the browser profile and history on one machine, outside network shares and cloud-synced folders such as OneDrive.
@@ -16,11 +18,11 @@ Sending a message does not guarantee a streak. TikTok controls streak eligibilit
 ## Installation
 
 ```sh
-npm ci
-npm run browser:install
+bun install --frozen-lockfile
+bun run browser:install
 ```
 
-On Linux, Playwright may require OS packages: `npx playwright install --with-deps chromium`. See [Playwright browser installation](https://playwright.dev/docs/browsers).
+On Linux, Playwright may require OS packages: `bun --bun playwright install --with-deps chromium`. See [Playwright browser installation](https://playwright.dev/docs/browsers).
 
 Create private configuration files:
 
@@ -36,14 +38,12 @@ cp config.example.json config.json
 cp .env.example .env
 ```
 
-If PowerShell blocks `npm.ps1`, use `npm.cmd` and `npx.cmd` in these commands. There is no need to change your execution policy.
-
 Set `DATA_DIR` in `.env` to a private directory outside a synced checkout, for example `C:/Users/YOU/AppData/Local/tiktok-streak-keeper` on Windows. Other examples are `/Users/YOU/Library/Application Support/tiktok-streak-keeper` or `/home/YOU/.local/share/tiktok-streak-keeper`. Paths may be absolute; relative paths resolve from the working directory. Always launch commands from the project root. `.env` never needs a password or token.
 
 ## Manual login
 
 ```sh
-npm run login
+bun run login
 ```
 
 A visible, dedicated Chromium profile opens. Sign in yourself, complete any legitimate verification, open your inbox, then press Enter in the terminal. No credentials are collected by this tool. Closing the persistent context saves the session under `DATA_DIR/browser-profile`.
@@ -74,8 +74,8 @@ Success means a new exact-text outgoing element appears, the composer clears, an
 ## Recipient configuration
 
 ```sh
-npm run chats
-npm run chats -- --select 1 --username friend.username
+bun run chats
+bun run chats --select 1 --username friend.username
 ```
 
 `chats` inspects currently rendered conversation links, without opening recipients or sending messages. It does not scrape all followers, scroll for unrelated accounts, or infer identity from display names. Selection prints an **unapproved** JSON draft; it never changes the allowlist. Output may contain private conversation details, so do not share it unredacted.
@@ -100,7 +100,7 @@ Start with one recipient. Once a dry-run succeeds, add other approved conversati
 ## Dry-run and live mode
 
 ```sh
-npm run test:send
+bun run test:send
 ```
 
 This always forces dry-run, even if live mode is configured. It opens approved conversations, verifies identity and UI readiness, and records a dry-run event. It does **not** fill the composer or click Send. Dry-runs do not consume the daily send reservation. Existing drafts cause a safe failure rather than being overwritten. A dry-run cannot validate the post-send evidence selector; manually inspect an existing outgoing message to calibrate it.
@@ -118,7 +118,7 @@ To enable live automation, after verifying your selectors and approved recipient
 These are fields to update in the full configuration, not a replacement file; retain the other `ui` fields. Then run:
 
 ```sh
-npm run send
+bun run send
 ```
 
 `send` remains dry-run under the default configuration. Setting `dryRun: false` without both other switches is a validation error. `approved: false` recipients are always ignored. Live sends are sequential, with a default 60-second interval (minimum 30). This limits load; it is not a claim about TikTok's permitted rate.
@@ -126,7 +126,7 @@ npm run send
 ## Scheduling
 
 ```sh
-npm run start
+bun run start
 ```
 
 Default: **20:00 Asia/Bangkok**, once daily. Change `schedule` using `HH:mm` and `timezone` using an IANA zone. Configuration is loaded at process start; restart after edits. Cron uses the configured timezone and prevents overlap. The browser is opened only for work and closed afterward. See [node-cron scheduling options](https://nodecron.com/scheduling-options.html).
@@ -140,7 +140,7 @@ For unattended use, run from a local OS service or Task Scheduler with the same 
 ## History, duplicate protection, and recovery
 
 ```sh
-npm run status
+bun run status
 ```
 
 Shows mode, schedule, approved count, and the latest 50 delivery/event records. This is private terminal output, including usernames; it omits message bodies and does not check authentication or whether another scheduler is running. SQLite stores the actual message, username, calendar day, UTC timestamp, and status locally.
@@ -167,7 +167,7 @@ Only transient navigation/browser-startup failures before submission are retried
 - **`AUTH_REQUIRED`:** run `login`; verify the signed-in selector if you are already authenticated.
 - **`SECURITY_CHALLENGE`:** stop automation and address the restriction manually. No automated CAPTCHA or 2FA handling is provided.
 - **`UI_CHANGED` / `IDENTITY_MISMATCH`:** inspect the active header, unique locators, empty composer, and outgoing-only selectors. Keep dry-run on while fixing them.
-- **`TRANSIENT_NAVIGATION`:** check network connectivity and `npm run browser:install`. A blocked platform is not retried indefinitely.
+- **`TRANSIENT_NAVIGATION`:** check network connectivity and `bun run browser:install`. A blocked platform is not retried indefinitely.
 - **`LOCKED`:** close the competing command, or wait two minutes after a crash. Do not remove a lock while a browser is active.
 - **`UNEXPECTED`:** verify the config file exists, compare it with the example, confirm filesystem permissions and that the database timezone matches. Raw browser errors are intentionally suppressed because they may contain private data.
 - **No supported chats:** your UI may not expose stable deep links or may use buttons instead of anchors. This version fails safely and requires an adapter update; it does not fall back to display names.
@@ -185,18 +185,18 @@ Pino logs only controlled event metadata and error codes, with additional sensit
 ## Development and verification
 
 ```sh
-npm run typecheck
-npm run lint
-npm test
-npm run build
-npm run format:check
+bun run typecheck
+bun run lint
+bun run test
+bun run build
+bun run format:check
 # Or all checks except build:
-npm run check
+bun run check
 ```
 
-`npm test` includes database/restart checks, timezone scheduling, config validation, bounded retries, allowlist enforcement, mock send failures, and real Chromium interaction with a fully intercepted fake inbox. Every fixture request is fulfilled or aborted locally; no real TikTok request, authenticated profile, or live message is used. Chromium must be installed first. CI can use the included workflow on Windows, macOS, and Linux.
+Use `bun run test` to run the existing Vitest suite under Bun (plain `bun test` invokes a different test runner). The suite includes database/restart checks, timezone scheduling, config validation, bounded retries, allowlist enforcement, mock send failures, and real Chromium interaction with a fully intercepted fake inbox. Every fixture request is fulfilled or aborted locally; no real TikTok request, authenticated profile, or live message is used. Chromium must be installed first. CI can use the included workflow on Windows, macOS, and Linux.
 
-Build outputs go to `dist`; for example `node dist/cli/index.js status`. SQLite reference: [Node.js SQLite documentation](https://nodejs.org/api/sqlite.html).
+Build outputs go to `dist`; for example `bun dist/cli/index.js status`. SQLite compatibility reference: [Bun Node.js compatibility](https://bun.com/docs/runtime/nodejs-compat).
 
 ```text
 src/
